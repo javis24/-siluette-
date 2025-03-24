@@ -1,33 +1,18 @@
 "use client";
 import React, { useState, useContext } from 'react';
-import { AuthContext } from '../contexts/authContext';
+
 import { useRouter } from 'next/navigation';
 import '../app/globals.css';
 
 const Login = () => { 
-  const [showPopup, setShowPopup] = useState(false);
-  const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
-  const { login } = useContext(AuthContext);
-  const router = useRouter();
-  const [error, setError] = useState('');
-
-  const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
-    try {
-      await login(email, password);
-      router.push('/inicio');
-    } catch (err: any) {
-      setError(err.response?.data?.message || 'Error al iniciar sesión');
-    }
-  };
+ 
 
   
 
   return (
     <div className="flex items-center justify-center min-h-screen bg-gray-100">
       <form
-        onSubmit={handleSubmit}
+      
         className="flex flex-col items-center gap-4 w-full max-w-sm bg-white p-6 rounded-lg shadow-lg"
       >
         <div className="flex flex-col w-full gap-2">
@@ -37,8 +22,7 @@ const Login = () => {
           <input
             type="email"
             id="email"
-            value={email}
-            onChange={(e) => setEmail(e.target.value)}
+            
             className="w-full p-3 rounded-md bg-gray-200 border-2 border-gray-500 focus:border-green-500 outline-none"
             required
           />
@@ -50,8 +34,7 @@ const Login = () => {
           <input
             type="password"
             id="password"
-            value={password}
-            onChange={(e) => setPassword(e.target.value)}
+            
             className="w-full p-3 rounded-md bg-gray-200 border-2 border-gray-500 focus:border-green-500 outline-none"
             required
           />
@@ -61,7 +44,7 @@ const Login = () => {
             Olvidaste tu contraseña :-(
           </a>
         </div>
-        {error && <p className="text-center text-red-500">{error}</p>}
+   
         <button type="submit" className="w-full py-3 mt-4 bg-gray-700 text-white rounded-full font-semibold transition-colors hover:bg-green-500 hover:text-gray-700">
           Entrar
         </button>
@@ -69,18 +52,18 @@ const Login = () => {
           ¿Te gustaría una sesión con SiluettePlusJC?{" "}
           <button
             type="button"
-            onClick={() => setShowPopup(true)}
+            
             className="text-green-500 hover:underline"
           >
             Inscríbete
           </button>
         </div>
       </form>
-      {showPopup && (
+
         <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
           <div className="bg-white p-6 rounded-lg shadow-lg w-full max-w-md relative">
             <button
-              onClick={() => setShowPopup(false)}
+             
               className="absolute top-2 right-2 text-gray-600 hover:text-gray-800 font-bold"
             >
               &times;
@@ -133,7 +116,7 @@ const Login = () => {
             </div>
           </div>
         </div>
-      )}
+      )
     </div>
   );
 };
