@@ -1,11 +1,7 @@
 "use client";
-import { motion } from 'framer-motion';
+import { motion } from "framer-motion";
 
-interface BannerProps {
-  services: any[]; // Reemplaza 'any[]' con el tipo correcto de 'services'
-}
-
-const Banner: React.FC<BannerProps> = ({ services }) => {
+const Banner: React.FC = () => {
   const textRow1 = ["Tu", "Belleza", "Natural"];
   const textRow2 = ["SiluettePlus", "JC"];
 
