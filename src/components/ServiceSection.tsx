@@ -34,10 +34,9 @@ const ServiceSection = () => {
     // Agrega más servicios según sea necesario
   ];
 
-  // Encuentra el servicio seleccionado en el arreglo
   const currentService = services.find(service => service.id === selectedService);
-   const whatsappNumber = "528713330566"; 
-   const whatsappMessage = "Me interesa una cita";
+  const whatsappNumber = "528713330566"; 
+  const whatsappMessage = "Me interesa una cita";
  
 
 
