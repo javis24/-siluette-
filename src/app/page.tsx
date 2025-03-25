@@ -11,18 +11,6 @@ import { teamMembers } from '@/components/teamMembersData';
 import TreatmentInfo from '@/components/TreatmentInfo';
 import Footer from '@/components/Footer';
 
-interface Service {
-  id: string;
-  name: string;
-  image: string;
-  description: string;
-}
-
-const services: Service[] = [
-  { id: 'facials', name: 'Drenaje Linfático', image: '/img/drenaje.png', description: 'Drenaje linfático es una técnica que mediante suaves y repetidas maniobras con duración de 20 a 30min, siempre superficiales sobre la piel, logra acelerar e incluso redirigir la circulación linfática superficial. Su aplicación acelera la reabsorción del edema. Es un método que tiene como finalidad drenar líquidos subcutaneos hacia los ganglios, es excelente para personas muy sedentarias y también para pacientes con cirugías estéticas recientes.' },
-  // ... otros servicios ...
-];
-
 export default function Home() {
   return (
     <>
@@ -30,7 +18,7 @@ export default function Home() {
         <title>Beauty Spa Header</title>
       </Head>
       <Header />
-      <Banner services={services} />
+      <Banner  />
       <ServiceSection />
       <TeamMembers members={teamMembers} />
       <AppointmentContainer />
