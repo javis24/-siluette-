@@ -13,7 +13,7 @@ const AppointmentContainer = () => {
             <label htmlFor="phone" className="block">Teléfono</label>
             <input type="tel" id="phone" name="phone" className="w-full p-2 rounded text-black" required />
             <label htmlFor="message" className="block">Mensaje</label>
-            <textarea id="message" name="message" rows="3" className="w-full p-2 rounded text-black" required></textarea>
+            <textarea id="message" name="message" rows={3}  className="w-full p-2 rounded text-black" required></textarea>
             <button type="submit" className="bg-black text-white px-4 py-2 rounded w-full lg:w-auto">Enviar Whatsapp</button>
           </form>
         </div>    
