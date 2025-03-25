@@ -13,7 +13,7 @@ const ServiceSection = () => {
   const [selectedService, setSelectedService] = useState<string>('facials');
 
   // Datos de cada servicio
-  const services = [
+  const services: Service[] = [
     { id: 'facials', name: 'Drenaje Linfático', image: '/img/drenaje.png', description: 'Drenaje linfático es una técnica que mediante suaves y repetidas maniobras con duración de 20 a 30min, siempre superficiales sobre la piel, logra acelerar e incluso redirigir la circulación linfática superficial. Su aplicación acelera la reabsorción del edema. Es un método que tiene como finalidad drenar líquidos subcutaneos hacia los ganglios, es excelente para personas muy sedentarias y también para pacientes con cirugías estéticas recientes.' },
     { id: 'mesotherapy', name: 'Mesoterapia', image: '/img/mesoterapiacorporal.png', description: 'Es una técnica que consiste en microinyecciones con sustancias que disuelven la grasa, o revitalizan, regeneración dependiendo del resultado que se desee lograr pueden ser alopatas u homeopáticos, así como minerales, vitaminas y aminoácidos sirven para reducir grasa, flacidez, celulitis y estrias' },
     { id: 'lipolaser', name: 'Ultra Lipolaser', image: '/img/ultra_lipolaser.png', description: 'Esta nueva tecnología es capaz de estimular la cadena enzimática fisiológica del metabolismo de las grasas. Gracias al láser de baja potencia se consigue una fotolipolisis que fragmenta los triglicéridos y los transforma en glicerol, ácidos grasos y agua, que se eliminara por la vías linfáticas, y reduce tallas significativamente, Excelente después de un embarazo.' },

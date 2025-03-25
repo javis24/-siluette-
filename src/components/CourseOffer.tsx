@@ -6,13 +6,14 @@ const CourseOffer = () => {
     <div className="container mx-auto flex flex-col md:flex-row items-center gap-10">
       {/* Imagen */}
       <div className="flex-shrink-0">
-        <Image
-          src="/img/curso_img.png" // Cambia esta ruta por la de tu imagen
-          alt="Profile"
-          width={300}
-          height={300}
-          className="rounded-lg shadow-lg"
-        />
+      <Image
+        src="/img/curso_img.png"
+        alt="Profile"
+        width={300}
+        height={300}
+        className="rounded-lg shadow-lg"
+      />
+
       </div>
 
       {/* Contenido */}
@@ -45,10 +46,11 @@ const CourseOffer = () => {
               href="https://pago.clip.mx/suscripcion/83481f39-bede-46d5-8f84-37244f332805"
               className="flex items-center justify-center"
             >
-              <img
+              <Image
                 src="https://cdn.prod.website-files.com/62588b32d8d6105ab7aa9721/63bf568610f3fdf437235192_Preview.svg"
                 alt="Logo Paga con Clip"
-                className="w-32" // Ajusta el tamaño según sea necesario
+                width={128} // Aproximadamente igual a w-32
+                height={40} // Estimación
               />
             </a>
 
