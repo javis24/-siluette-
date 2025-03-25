@@ -1,7 +1,20 @@
 "use client";
 import { motion } from "framer-motion";
 
-const Banner: React.FC = () => {
+// Interfaz del tipo Service
+interface Service {
+  id: string;
+  name: string;
+  image: string;
+  description: string;
+}
+
+// Interfaz de las props del componente
+interface BannerProps {
+  services: Service[]; // puedes usar esta prop en el futuro
+}
+
+const Banner: React.FC<BannerProps> = ({ services }) => {
   const textRow1 = ["Tu", "Belleza", "Natural"];
   const textRow2 = ["SiluettePlus", "JC"];
 
