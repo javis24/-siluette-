@@ -1,5 +1,5 @@
 "use client";
-
+import Image from 'next/image';
 import { useState } from 'react';
 
 interface Service {
@@ -60,7 +60,13 @@ const ServiceSection = () => {
       <div className="content-display lg:col-span-2 p-5 border-t lg:border-t-0 lg:border-l border-gray-300">
         {currentService && (
           <div className="content-wrapper flex flex-col lg:flex-row lg:space-x-4">
-            <img src={currentService.image} alt={currentService.name} className="content-image w-full lg:w-[300px] rounded mb-4 lg:mb-0" />
+            <Image
+                src={currentService.image}
+                alt={currentService.name}
+                width={300}
+                height={300}
+                className="content-image w-full lg:w-[300px] rounded mb-4 lg:mb-0"
+              />
             <div className="content-text max-w-lg">
               <h2 className="text-2xl font-semibold">{currentService.name}</h2>
              

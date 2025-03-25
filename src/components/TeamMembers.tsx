@@ -1,5 +1,6 @@
 "use client";
 import React from 'react';
+import Image from 'next/image';
 
 interface TeamMember {
   name: string;
@@ -20,10 +21,12 @@ const TeamMembers: React.FC<TeamMembersProps> = ({ members }) => {
         <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
           {members.map((member, index) => (
             <div key={index} className="flex flex-col items-center">
-              <img
+              <Image
                 src={member.image}
                 alt={member.name}
-                className="w-80 h-80  object-cover rounded-lg"
+                width={320}
+                height={320}
+                className="object-cover rounded-lg"
               />
               <h3 className="text-xl font-semibold">{member.name}</h3>
               <p className="text-gray-600 mb-2">{member.role}</p>
