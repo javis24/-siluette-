@@ -18,6 +18,7 @@ export async function GET(req: NextRequest) {
 
     return NextResponse.json(user);
   } catch (error) {
+    console.error(error);
     return NextResponse.json({ error: 'Error al buscar el usuario' }, { status: 500 });
   }
 }
@@ -45,6 +46,7 @@ export async function PUT(req: NextRequest) {
 
     return NextResponse.json({ message: 'Usuario actualizado correctamente ✅' });
   } catch (error) {
+    console.error(error);
     return NextResponse.json({ error: 'Error al actualizar usuario' }, { status: 500 });
   }
 }
@@ -61,6 +63,7 @@ export async function DELETE(req: NextRequest) {
 
     return NextResponse.json({ message: 'Usuario eliminado' });
   } catch (error) {
+    console.error(error);
     return NextResponse.json({ error: 'Error al eliminar usuario' }, { status: 500 });
   }
 }
