@@ -3,23 +3,25 @@ import Users from '@/models/User';
 import { hash } from 'bcryptjs';
 
 // GET: Obtener usuario por UUID
-export async function GET(_: NextRequest, { params }: { params: { id: string } }) {
-    try {
-      const user = await Users.findOne({
-        where: { uuid: params.id },
-        attributes: ['uuid', 'name', 'email', 'role'] // 👈 Solo estos campos
-      });
-  
-      if (!user) {
-        return NextResponse.json({ error: 'Usuario no encontrado' }, { status: 404 });
-      }
-  
-      return NextResponse.json(user);
-    } catch (error) {
-      console.error(error);
-      return NextResponse.json({ error: 'Error al buscar usuario' }, { status: 500 });
+export async function GET(req: NextRequest) {
+  const url = new URL(req.url);
+  const id = url.pathname.split('/').pop(); // Extrae el ID desde la ruta
+
+  try {
+    const user = await Users.findOne({
+      where: { uuid: id },
+      attributes: ['uuid', 'name', 'email', 'role']
+    });
+
+    if (!user) {
+      return NextResponse.json({ error: 'Usuario no encontrado' }, { status: 404 });
     }
+
+    return NextResponse.json(user);
+  } catch (error) {
+    return NextResponse.json({ error: 'Error al buscar el usuario' }, { status: 500 });
   }
+}
   
   // PUT: Actualizar usuario
   export async function PUT(req: NextRequest, { params }: { params: { id: string } }) {
