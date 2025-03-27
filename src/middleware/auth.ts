@@ -17,6 +17,7 @@ export const authenticate = async (req: NextRequest) => {
 
     return { user: decoded };
   } catch (error) {
+    console.error(error);
     return NextResponse.json({ error: 'Token inválido' }, { status: 401 });
   }
 };

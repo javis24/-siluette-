@@ -19,6 +19,7 @@ export async function GET(req: NextRequest) {
     const own = await Pacientes.findAll({ where: { userId: user.id } });
     return NextResponse.json(own);
   } catch (error) {
+    console.error(error);
     return NextResponse.json({ error: 'Error al obtener pacientes' }, { status: 500 });
   }
 }
@@ -38,6 +39,7 @@ export async function POST(req: NextRequest) {
     const paciente = await Pacientes.create(body);
     return NextResponse.json(paciente);
   } catch (error) {
+    console.error(error);
     return NextResponse.json({ error: 'Error al crear paciente' }, { status: 500 });
   }
 }

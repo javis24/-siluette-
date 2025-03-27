@@ -16,6 +16,7 @@ export async function GET(req: NextRequest) {
     const own = await Tratamientos.findAll({ where: { pacienteId: user.id } });
     return NextResponse.json(own);
   } catch (error) {
+    console.error(error);
     return NextResponse.json({ error: 'Error al obtener tratamientos' }, { status: 500 });
   }
 }
@@ -34,6 +35,7 @@ export async function POST(req: NextRequest) {
     const created = await Tratamientos.create(body);
     return NextResponse.json(created);
   } catch (error) {
+    console.error(error);
     return NextResponse.json({ error: 'Error al crear tratamiento' }, { status: 500 });
   }
 }
@@ -59,6 +61,7 @@ export async function PUT(req: NextRequest) {
     await treatment.update(data);
     return NextResponse.json({ message: 'Tratamiento actualizado' });
   } catch (error) {
+    console.error(error);
     return NextResponse.json({ error: 'Error al actualizar tratamiento' }, { status: 500 });
   }
 }
@@ -84,6 +87,7 @@ export async function DELETE(req: NextRequest) {
     await treatment.destroy();
     return NextResponse.json({ message: 'Tratamiento eliminado' });
   } catch (error) {
+    console.error(error);
     return NextResponse.json({ error: 'Error al eliminar tratamiento' }, { status: 500 });
   }
 }

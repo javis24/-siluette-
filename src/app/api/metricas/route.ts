@@ -16,6 +16,7 @@ export async function GET(req: NextRequest) {
     const own = await Metricas.findAll({ where: { pacienteUuid: user.id } });
     return NextResponse.json(own);
   } catch (error) {
+    console.error(error);
     return NextResponse.json({ error: 'Error al obtener métricas' }, { status: 500 });
   }
 }
@@ -34,6 +35,7 @@ export async function POST(req: NextRequest) {
     const created = await Metricas.create(body);
     return NextResponse.json(created);
   } catch (error) {
+    console.error(error);
     return NextResponse.json({ error: 'Error al crear métrica' }, { status: 500 });
   }
 }
@@ -59,6 +61,7 @@ export async function PUT(req: NextRequest) {
     await metric.update(data);
     return NextResponse.json({ message: 'Métrica actualizada' });
   } catch (error) {
+    console.error(error);
     return NextResponse.json({ error: 'Error al actualizar métrica' }, { status: 500 });
   }
 }
@@ -84,6 +87,7 @@ export async function DELETE(req: NextRequest) {
     await metric.destroy();
     return NextResponse.json({ message: 'Métrica eliminada' });
   } catch (error) {
+    console.error(error);
     return NextResponse.json({ error: 'Error al eliminar métrica' }, { status: 500 });
   }
 }
