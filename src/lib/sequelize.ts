@@ -1,5 +1,7 @@
 import { Sequelize } from 'sequelize';
+import dotenv from 'dotenv';
 
+dotenv.config();
 
 const db = new Sequelize(
   process.env.MYSQL_DATABASE as string,
@@ -8,7 +10,6 @@ const db = new Sequelize(
   {
     host: process.env.MYSQL_HOST,
     dialect: 'mysql',
-    dialectModule: require('mysql2'), 
     logging: false,
   }
 );
