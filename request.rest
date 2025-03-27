@@ -1,0 +1,31 @@
+### Crear un nuevo usuario
+POST http://localhost:3000/api/users
+Content-Type: application/json
+
+{
+  "name": "Ximena Martinez",
+  "email": "xmartinez@example.com",
+  "password": "12345678",
+  "role": "secretary"
+}
+
+### ver todos los usuarios
+GET http://localhost:3000/api/users
+
+
+### ver usuarios poe ID
+GET http://localhost:3000/api/users/e0beff46-9331-457f-a78b-21e4d105879e
+
+
+### Actualizar un usuario por UUID
+PUT http://localhost:3000/api/users/e0beff46-9331-457f-a78b-21e4d105879e
+Content-Type: application/json
+
+{
+  "name": "Juan Martinez ",
+  "email": "juan.actualizado@example.com",
+  "password": "12345678",
+  "role": "admin"
+}
+
+

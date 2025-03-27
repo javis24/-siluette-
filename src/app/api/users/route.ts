@@ -1,19 +1,20 @@
 import { NextRequest, NextResponse } from 'next/server';
-import db from '@/lib/sequelize'; 
 import Users from '@/models/User'; 
 import { hash } from 'bcryptjs';
 
 // GET: Obtener todos los usuarios
 export async function GET() {
-  try {
-    const users = await Users.findAll({
-      attributes: { exclude: ['password'] }
-    });
-    return NextResponse.json(users);
-  } catch (error) {
-    return NextResponse.json({ error: 'Error al obtener usuarios' }, { status: 500 });
+    try {
+      const users = await Users.findAll({
+        attributes: ['uuid', 'name', 'email', 'role'],
+      });
+  
+      return NextResponse.json(users);
+    } catch (error) {
+      console.error('Error al obtener usuarios:', error);
+      return NextResponse.json({ message: 'Error al obtener los usuarios' }, { status: 500 });
+    }
   }
-}
 
 // POST: Crear nuevo usuario
 export async function POST(req: NextRequest) {

@@ -1,9 +1,10 @@
 import { NextResponse } from 'next/server';
 import db from '@/lib/sequelize'; // tu conexión
-import Users from '@/models/User';
-import Pacientes from '@/models/Paciente';
-import MetricasSalud from '@/models/MetricasSalud';
-import TratamientosEsteticos from '@/models/TratamientosEsteticos';
+import '@/models/User';
+import '@/models/Paciente';
+import '@/models/MetricasSalud';
+import '@/models/TratamientosEsteticos';
+
 
 export async function GET() {
     try {
