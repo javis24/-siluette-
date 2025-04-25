@@ -1,5 +1,5 @@
 import { NextResponse } from 'next/server';
-import db from '@/lib/sequelize'; // tu conexión
+import db from '@/lib/sequelize'; 
 import '@/models/User';
 import '@/models/Paciente';
 import '@/models/MetricasSalud';
