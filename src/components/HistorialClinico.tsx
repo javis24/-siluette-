@@ -7,8 +7,14 @@ interface Props {
   userId: string;
 }
 
+interface HistorialEntry {
+  tipo: string;
+  fecha: string;
+  data: Record<string, any>;
+}
+
 export default function HistorialClinico({ pacienteUuid, userId }: Props) {
-  const [historial, setHistorial] = useState<any[]>([]);
+  const [historial, setHistorial] = useState<HistorialEntry[]>([]);
 
   useEffect(() => {
     const token = localStorage.getItem('token');
@@ -30,7 +36,7 @@ export default function HistorialClinico({ pacienteUuid, userId }: Props) {
           citasRes.json(),
         ]);
 
-        const data = [];
+        const data: HistorialEntry[] = [];
 
         if (paciente) {
           data.push({ tipo: 'Datos del Paciente', fecha: paciente.updatedAt, data: paciente });
@@ -41,9 +47,11 @@ export default function HistorialClinico({ pacienteUuid, userId }: Props) {
         if (tratamientos) {
           data.push({ tipo: 'Tratamientos Estéticos', fecha: tratamientos.updatedAt, data: tratamientos });
         }
-        citas.forEach((cita: any) => {
-          data.push({ tipo: 'Cita', fecha: cita.fecha, data: cita });
-        });
+        if (Array.isArray(citas)) {
+          citas.forEach((cita: Record<string, any>) => {
+            data.push({ tipo: 'Cita', fecha: cita.fecha, data: cita });
+          });
+        }
 
         const ordenado = data.sort((a, b) => new Date(b.fecha).getTime() - new Date(a.fecha).getTime());
         setHistorial(ordenado);
@@ -100,7 +108,7 @@ export default function HistorialClinico({ pacienteUuid, userId }: Props) {
     return mapa[campo] || campo;
   };
 
-  const filtrarCampos = (obj: any) => {
+  const filtrarCampos = (obj: Record<string, any>) => {
     const excluidos = ['uuid', 'id', 'userId', 'createdAt', 'updatedAt'];
     return Object.entries(obj)
       .filter(([key]) => !excluidos.includes(key))

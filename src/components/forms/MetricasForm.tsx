@@ -1,4 +1,3 @@
-// MetricasForm.tsx
 'use client';
 
 import { useState } from 'react';
@@ -7,8 +6,27 @@ interface Props {
   pacienteUuid: string;
 }
 
+interface Metricas {
+  weight: string;
+  fatPercentage: string;
+  muscleKg: string;
+  bodyWater: string;
+  phy: string;
+  metabolicAge: string;
+  heartRate: string;
+  visceralFat: string;
+  bmi: string;
+  hip: string;
+  thighs: string;
+  arms: string;
+  chest: string;
+  waist: string;
+  abdomen: string;
+  kcla: string;
+}
+
 export default function MetricasForm({ pacienteUuid }: Props) {
-  const [formData, setFormData] = useState({
+  const [formData, setFormData] = useState<Metricas>({
     weight: '',
     fatPercentage: '',
     muscleKg: '',
@@ -26,6 +44,7 @@ export default function MetricasForm({ pacienteUuid }: Props) {
     abdomen: '',
     kcla: '',
   });
+
   const [message, setMessage] = useState('');
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -51,21 +70,36 @@ export default function MetricasForm({ pacienteUuid }: Props) {
       if (res.ok) {
         setMessage('✅ Métricas registradas');
         setFormData({
-          weight: '', fatPercentage: '', muscleKg: '', bodyWater: '', phy: '',
-          metabolicAge: '', heartRate: '', visceralFat: '', bmi: '', hip: '',
-          thighs: '', arms: '', chest: '', waist: '', abdomen: '', kcla: '',
+          weight: '',
+          fatPercentage: '',
+          muscleKg: '',
+          bodyWater: '',
+          phy: '',
+          metabolicAge: '',
+          heartRate: '',
+          visceralFat: '',
+          bmi: '',
+          hip: '',
+          thighs: '',
+          arms: '',
+          chest: '',
+          waist: '',
+          abdomen: '',
+          kcla: '',
         });
       } else {
         setMessage('❌ Error al guardar métricas');
       }
-    } catch (error) {
-      console.error(error);
+    } catch {
       setMessage('❌ Error de red');
     }
   };
 
   return (
-    <form onSubmit={handleSubmit} className="grid grid-cols-1 md:grid-cols-3 gap-4 bg-white dark:bg-gray-800 p-6 rounded shadow-md">
+    <form
+      onSubmit={handleSubmit}
+      className="grid grid-cols-1 md:grid-cols-3 gap-4 bg-white dark:bg-gray-800 p-6 rounded shadow-md"
+    >
       <h2 className="col-span-full text-xl font-bold text-gray-800 dark:text-white">Métricas de Salud</h2>
 
       {Object.entries(formData).map(([name, value]) => (
@@ -85,7 +119,10 @@ export default function MetricasForm({ pacienteUuid }: Props) {
         <button type="submit" className="btn">Guardar</button>
         <button type="reset" className="btn-secondary">Cancelar</button>
       </div>
-      {message && <p className="col-span-full text-center text-sm text-blue-500">{message}</p>}
+
+      {message && (
+        <p className="col-span-full text-center text-sm text-blue-500">{message}</p>
+      )}
     </form>
   );
 }

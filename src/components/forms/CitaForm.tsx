@@ -4,7 +4,7 @@ import { useState, useEffect } from 'react';
 
 interface Props {
   onCitaCreada?: () => void;
-  userId?: string; // para pasar desde el perfil
+  userId?: string;
 }
 
 interface FormData {
@@ -13,6 +13,12 @@ interface FormData {
   hora: string;
   comentario: string;
   servicio: string;
+}
+
+interface User {
+  id: string;
+  name: string;
+  role: string;
 }
 
 export default function CitaForm({ onCitaCreada, userId }: Props) {
@@ -24,32 +30,31 @@ export default function CitaForm({ onCitaCreada, userId }: Props) {
     servicio: '',
   });
 
-  const [users, setUsers] = useState<any[]>([]);
+  const [users, setUsers] = useState<User[]>([]);
   const [searchTerm, setSearchTerm] = useState('');
-  const [filteredUsers, setFilteredUsers] = useState<any[]>([]);
+  const [filteredUsers, setFilteredUsers] = useState<User[]>([]);
   const [message, setMessage] = useState('');
 
   useEffect(() => {
     const fetchUsers = async () => {
       const token = localStorage.getItem('token');
       if (!token) return;
-  
+
       const res = await fetch('/api/users', {
         headers: {
           Authorization: `Bearer ${token}`,
         },
       });
-  
+
       if (res.ok) {
-        const data = await res.json();
-        const clientsOnly = data.filter((user: any) => user.role === 'client');
+        const data: User[] = await res.json();
+        const clientsOnly = data.filter((user) => user.role === 'client');
         setUsers(clientsOnly);
       }
     };
-  
+
     fetchUsers();
   }, []);
-  
 
   const handleSearchChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const value = e.target.value;
@@ -61,11 +66,10 @@ export default function CitaForm({ onCitaCreada, userId }: Props) {
     setFilteredUsers(filtered);
   };
 
-  const handleUserSelect = (user: any) => {
+  const handleUserSelect = (user: User) => {
     setSearchTerm(user.name);
     setFilteredUsers([]);
     setFormData((prev) => ({ ...prev, userId: user.id }));
-
   };
 
   const handleChange = (
@@ -109,8 +113,7 @@ export default function CitaForm({ onCitaCreada, userId }: Props) {
       } else {
         setMessage(`❌ ${data.error || 'No se pudo crear la cita'}`);
       }
-    } catch (err) {
-      console.error(err);
+    } catch {
       setMessage('❌ Error de red');
     }
   };
@@ -136,18 +139,17 @@ export default function CitaForm({ onCitaCreada, userId }: Props) {
             placeholder="Escribe el nombre del paciente"
             className="w-full p-2 rounded bg-gray-100 dark:bg-gray-700 dark:text-white"
           />
-      <ul className="absolute z-10 w-full bg-white border border-gray-300 rounded shadow max-h-60 overflow-y-auto dark:bg-gray-800 dark:border-gray-600">
-      {filteredUsers.map((user) => (
-            <li
-              key={user.id}
-              onClick={() => handleUserSelect(user)}
-              className="..."
-            >
-              {user.name}
-            </li>
-          ))}
-
-          </ul> 
+          <ul className="absolute z-10 w-full bg-white border border-gray-300 rounded shadow max-h-60 overflow-y-auto dark:bg-gray-800 dark:border-gray-600">
+            {filteredUsers.map((user) => (
+              <li
+                key={user.id}
+                onClick={() => handleUserSelect(user)}
+                className="cursor-pointer px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-700"
+              >
+                {user.name}
+              </li>
+            ))}
+          </ul>
         </div>
       )}
 
