@@ -1,34 +1,61 @@
-// components/Sidebar.tsx
-import React from 'react';
+'use client';
+
+import Link from 'next/link';
+import { useRouter } from 'next/navigation';
 
 interface SidebarProps {
-  setActiveSection: (section: string) => void;
-  userRole: string | null; // Acepta el rol como prop
+  onToggle: () => void;
 }
 
-const Sidebar: React.FC<SidebarProps> = ({ setActiveSection, userRole }) => {
-  return (
-    <div className="bg-gray-800 text-white w-64 flex flex-col">
-      <div className="p-4">
-        <h2 className="text-2xl font-semibold">Admin Panel</h2>
-      </div>
-      <nav className="flex-1 p-4">
-        <ul className="space-y-2">
-          {userRole === 'admin' && (
-            <li onClick={() => setActiveSection('users')} className="cursor-pointer hover:bg-gray-700 p-2 rounded">Usuarios</li>
-          )}
-          {(userRole === 'admin' || userRole === 'secretary') && (
-            <>
-              <li onClick={() => setActiveSection('patients')} className="cursor-pointer hover:bg-gray-700 p-2 rounded">Pacientes</li>
-              <li onClick={() => setActiveSection('metrics')} className="cursor-pointer hover:bg-gray-700 p-2 rounded">Métricas</li>
-              <li onClick={() => setActiveSection('treatments')} className="cursor-pointer hover:bg-gray-700 p-2 rounded">Tratamientos</li>
-            </>
-          )}
-          <li onClick={() => setActiveSection('profile')} className="cursor-pointer hover:bg-gray-700 p-2 rounded">Perfil</li>
-        </ul>
-      </nav>
-    </div>
-  );
-};
+export default function Sidebar({ onToggle }: SidebarProps) {
+  const router = useRouter();
 
-export default Sidebar;
+  const handleLogout = () => {
+    localStorage.removeItem('token'); // ✅ Limpiar token
+    router.push('/auth/login');            // 🔁 Redirigir a login
+  };
+
+  return (
+    <aside className="w-64 bg-gray-800 text-white p-6 space-y-4 relative">
+      <button
+        onClick={onToggle}
+        className="absolute top-4 right-4 text-white bg-gray-700 hover:bg-gray-600 px-2 py-1 rounded transition"
+      >
+        ✕
+      </button>
+
+      <h2 className="text-xl font-bold mb-6">Panel de Control</h2>
+      <nav className="flex flex-col gap-2">
+        <Link href="/dashboard" className="hover:bg-gray-700 p-2 rounded">
+          🏠 Inicio
+        </Link>
+        <Link href="/dashboard/citas" className="hover:bg-gray-700 p-2 rounded">
+          📅 Agenda de Citas
+        </Link>
+        <Link href="/dashboard/pacientes" className="hover:bg-gray-700 p-2 rounded">
+          👤 Registro de Pacientes
+        </Link>
+        <Link href="/dashboard/metricas" className="hover:bg-gray-700 p-2 rounded">
+          📈 Métricas de Salud
+        </Link>
+        <Link href="/dashboard/tratamientos" className="hover:bg-gray-700 p-2 rounded">
+          💆 Tratamientos Estéticos
+        </Link>
+        <Link href="/dashboard/reportes" className="hover:bg-gray-700 p-2 rounded">
+          📊 Reportes
+        </Link>
+        <Link href="/dashboard/calendario" className="hover:bg-gray-700 p-2 rounded">
+        🗓️ Agenda de Citas</Link>
+      </nav>
+
+      <div className="pt-6 border-t border-gray-600 mt-4">
+        <button
+          onClick={handleLogout}
+          className="w-full text-left hover:bg-red-600 p-2 rounded transition bg-red-500"
+        >
+          🚪 Cerrar sesión
+        </button>
+      </div>
+    </aside>
+  );
+}

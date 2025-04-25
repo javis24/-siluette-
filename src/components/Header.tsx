@@ -37,7 +37,7 @@ const Header = () => {
       <li className="mb-2 md:mb-0"><a href="#home">Home</a></li>
       <li className="mb-2 md:mb-0"><a href="#cursos">Cursos</a></li>
       <li className="mb-2 md:mb-0"><a href="#servicios">Servicios</a></li>
-      <li><Link href="/login">Regístrate</Link></li>
+      <li><Link href="/auth/login">Iniciar Sesión</Link></li>
     </ul>
   </nav>
 </header>

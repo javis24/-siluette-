@@ -6,7 +6,7 @@ import { hash } from 'bcryptjs';
 export async function GET() {
     try {
       const users = await Users.findAll({
-        attributes: ['uuid', 'name', 'email', 'role'],
+        attributes: ['id', 'name', 'email', 'role'],
       });
   
       return NextResponse.json(users);

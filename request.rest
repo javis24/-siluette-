@@ -29,3 +29,5 @@ Content-Type: application/json
 }
 
 
+### ver todos los usuarios
+GET http://localhost:3000/api/pacientes

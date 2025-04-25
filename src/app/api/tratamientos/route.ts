@@ -7,6 +7,18 @@ export async function GET(req: NextRequest) {
   if (!('user' in auth)) return auth;
   const { user } = auth;
 
+  const uuid = req.nextUrl.searchParams.get('uuid');
+  if (uuid) {
+    try {
+      const tratamiento = await Tratamientos.findOne({ where: { pacienteId: uuid } });
+      if (!tratamiento) return NextResponse.json({}, { status: 200 });
+      return NextResponse.json(tratamiento);
+    } catch (error) {
+      return NextResponse.json({ error: 'Error al obtener tratamiento por UUID' }, { status: 500 });
+    }
+  }
+
+  // flujo original
   try {
     if (user.role === 'admin' || user.role === 'secretary') {
       const all = await Tratamientos.findAll();
@@ -21,6 +33,7 @@ export async function GET(req: NextRequest) {
   }
 }
 
+
 export async function POST(req: NextRequest) {
   const auth = await authenticate(req);
   if (!('user' in auth)) return auth;
@@ -32,13 +45,27 @@ export async function POST(req: NextRequest) {
 
   try {
     const body = await req.json();
-    const created = await Tratamientos.create(body);
-    return NextResponse.json(created);
+
+    if (!body.pacienteId) {
+      return NextResponse.json({ error: 'Falta pacienteId' }, { status: 400 });
+    }
+
+    // Buscar si ya existen tratamientos para ese paciente
+    const existente = await Tratamientos.findOne({ where: { pacienteId: body.pacienteId } });
+
+    if (existente) {
+      await existente.update(body);
+      return NextResponse.json({ message: 'Tratamientos actualizados', updated: true, data: existente });
+    }
+
+    const creado = await Tratamientos.create(body);
+    return NextResponse.json({ message: 'Tratamientos registrados', created: true, data: creado });
   } catch (error) {
-    console.error(error);
-    return NextResponse.json({ error: 'Error al crear tratamiento' }, { status: 500 });
+    console.error('Error al guardar tratamientos:', error);
+    return NextResponse.json({ error: 'Error al guardar tratamientos' }, { status: 500 });
   }
 }
+
 
 export async function PUT(req: NextRequest) {
   const auth = await authenticate(req);

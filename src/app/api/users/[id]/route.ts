@@ -1,15 +1,17 @@
 import { NextRequest, NextResponse } from 'next/server';
-import Users from '@/models/User';
+import User from '@/models/User';
 import { hash } from 'bcryptjs';
 
-// GET: Obtener usuario
-export async function GET(req: NextRequest) {
-  const id = req.nextUrl.pathname.split('/').pop();
+export async function GET(
+  req: NextRequest,
+  { params }: { params: { id: string } }
+) {
+  const id = params.id;
 
   try {
-    const user = await Users.findOne({
-      where: { uuid: id },
-      attributes: ['uuid', 'name', 'email', 'role']
+    const user = await User.findOne({
+      where: id.length === 36 ? { uuid: id } : { id: Number(id) },
+      attributes: ['uuid', 'name', 'email'],
     });
 
     if (!user) {
@@ -23,15 +25,17 @@ export async function GET(req: NextRequest) {
   }
 }
 
+
+
 // PUT: Actualizar usuario
-export async function PUT(req: NextRequest) {
-  const id = req.nextUrl.pathname.split('/').pop();
+export async function PUT(req: NextRequest, context: { params: { id: string } }) {
+  const { id } = context.params;
 
   try {
     const body = await req.json();
     const { name, email, password, role } = body;
 
-    const user = await Users.findOne({ where: { uuid: id } });
+    const user = await User.findOne({ where: { uuid: id } });
     if (!user) return NextResponse.json({ error: 'Usuario no encontrado' }, { status: 404 });
 
     const updatedPassword = password ? await hash(password, 10) : undefined;
@@ -52,11 +56,11 @@ export async function PUT(req: NextRequest) {
 }
 
 // DELETE: Eliminar usuario
-export async function DELETE(req: NextRequest) {
-  const id = req.nextUrl.pathname.split('/').pop();
+export async function DELETE(req: NextRequest, context: { params: { id: string } }) {
+  const { id } = context.params;
 
   try {
-    const user = await Users.findOne({ where: { uuid: id } });
+    const user = await User.findOne({ where: { uuid: id } });
     if (!user) return NextResponse.json({ error: 'Usuario no encontrado' }, { status: 404 });
 
     await user.destroy();
