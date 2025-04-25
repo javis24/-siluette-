@@ -14,6 +14,7 @@ export async function GET(req: NextRequest) {
       if (!metricas) return NextResponse.json({}, { status: 200 }); // o { error: 'No encontrado' }
       return NextResponse.json(metricas);
     } catch (error) {
+      console.error(error);
       return NextResponse.json({ error: 'Error al obtener métricas por UUID' }, { status: 500 });
     }
   }
@@ -27,8 +28,8 @@ export async function GET(req: NextRequest) {
 
     const own = await Metricas.findAll({ where: { pacienteUuid: user.id } });
     return NextResponse.json(own);
-  } catch  {
-    console.error;
+  } catch (error) {
+    console.error(error);
     return NextResponse.json({ error: 'Error al obtener métricas' }, { status: 500 });
   }
 }
@@ -116,7 +117,8 @@ export async function DELETE(req: NextRequest) {
     await metric.destroy();
     return NextResponse.json({ message: 'Métrica eliminada' });
   } catch (error) {
-    console.error(error);
-    return NextResponse.json({ error: 'Error al eliminar métrica' }, { status: 500 });
-  }
+  console.error(error);
+  return NextResponse.json({ error: 'Error al eliminar métricas' }, { status: 500 });
+}
+
 }

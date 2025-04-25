@@ -13,7 +13,8 @@ export async function GET(req: NextRequest) {
       const tratamiento = await Tratamientos.findOne({ where: { pacienteId: uuid } });
       if (!tratamiento) return NextResponse.json({}, { status: 200 });
       return NextResponse.json(tratamiento);
-    } catch  {
+    } catch (error) {
+      console.error(error);
       return NextResponse.json({ error: 'Error al obtener tratamiento por UUID' }, { status: 500 });
     }
   }
@@ -27,8 +28,8 @@ export async function GET(req: NextRequest) {
 
     const own = await Tratamientos.findAll({ where: { pacienteId: user.id } });
     return NextResponse.json(own);
-  } catch  {
-    console.error;
+  } catch (error) {
+    console.error(error);
     return NextResponse.json({ error: 'Error al obtener tratamientos' }, { status: 500 });
   }
 }
@@ -60,8 +61,8 @@ export async function POST(req: NextRequest) {
 
     const creado = await Tratamientos.create(body);
     return NextResponse.json({ message: 'Tratamientos registrados', created: true, data: creado });
-  } catch {
-    console.error('Error al guardar tratamientos:');
+  } catch (error) {
+    console.error(error);
     return NextResponse.json({ error: 'Error al guardar tratamientos' }, { status: 500 });
   }
 }
@@ -87,8 +88,8 @@ export async function PUT(req: NextRequest) {
 
     await treatment.update(data);
     return NextResponse.json({ message: 'Tratamiento actualizado' });
-  } catch  {
-    console.error;
+  } catch (error) {
+    console.error(error);
     return NextResponse.json({ error: 'Error al actualizar tratamiento' }, { status: 500 });
   }
 }
@@ -113,8 +114,8 @@ export async function DELETE(req: NextRequest) {
 
     await treatment.destroy();
     return NextResponse.json({ message: 'Tratamiento eliminado' });
-  } catch  {
-    console.error;
+  } catch (error) {
+    console.error(error);
     return NextResponse.json({ error: 'Error al eliminar tratamiento' }, { status: 500 });
   }
 }
