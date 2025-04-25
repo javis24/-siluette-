@@ -47,7 +47,7 @@ export async function POST(req: NextRequest) {
       { status: 200 }
     );
 
-  } catch (error) {
+  } catch {
     return NextResponse.json({ message: 'Error al iniciar sesión' }, { status: 500 });
   }
 }

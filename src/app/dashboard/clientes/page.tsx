@@ -72,8 +72,8 @@ export default function PacienteManagerPage() {
           setPacienteUuid(paciente.uuid);
         }
       }
-    } catch (error) {
-      console.error('Error al buscar paciente existente', error);
+    } catch  {
+      console.error('Error al buscar paciente existente');
     }
   };
 

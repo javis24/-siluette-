@@ -61,8 +61,8 @@ export default function PerfilUsuarioPage() {
             setPacienteUuid(paciente.uuid);
           }
         }
-      } catch (error) {
-        console.error('Error cargando datos del perfil', error);
+      } catch  {
+        console.error('Error cargando datos del perfil');
       }
     };
   

@@ -27,8 +27,8 @@ export async function GET(req: NextRequest) {
 
     const own = await Metricas.findAll({ where: { pacienteUuid: user.id } });
     return NextResponse.json(own);
-  } catch (error) {
-    console.error(error);
+  } catch  {
+    console.error;
     return NextResponse.json({ error: 'Error al obtener métricas' }, { status: 500 });
   }
 }
