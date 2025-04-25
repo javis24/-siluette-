@@ -22,7 +22,6 @@ import {
   DialogTitle
 } from '@/components/ui/dialog';
 import { Button } from '@/components/ui/buttons';
-import CalendarioCitas from '@/components/CalendarioCitas';
 import CitaForm from '@/components/forms/CitaForm';
 
 

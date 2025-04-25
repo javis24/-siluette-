@@ -5,7 +5,7 @@ import Link from 'next/link';
 const Header = () => {
   return (
     <header className="header-top w-full">
-      {/* Barra superior con información de contacto y redes sociales */}
+      
       <div className="top-bar flex flex-col md:flex-row items-center md:items-start justify-between bg-[#dfd299] p-2 text-[#cbaa3d]">
       <div className="contact-info flex flex-col md:flex-row items-center text-center md:text-left space-y-2 md:space-y-0 md:space-x-4">
         <span><i className="fas fa-envelope"></i> cursos@siluetteplusjc.com</span>
@@ -17,7 +17,7 @@ const Header = () => {
         <i className="fab fa-instagram"></i>
       </div>
     </div>
-   {/* Barra principal con logo, título y botón */}
+  
    <div className="main-bar flex flex-col md:flex-row justify-between items-center h-auto md:h-24 bg-white p-4">
     <div className="logo mb-2 md:mb-0">
     <Image src="/img/silluet_logo.png" alt="Logo" width={100} height={100} />
@@ -31,7 +31,7 @@ const Header = () => {
     </div>
   </div>
 
-  {/* Barra de navegación */}
+ 
   <nav className="navbar flex justify-center bg-[#cbaa3d] p-2 rounded-lg shadow-md">
     <ul className="navbar-list flex flex-col md:flex-row md:space-x-4 text-white text-lg font-semibold">
       <li className="mb-2 md:mb-0"><a href="#home">Home</a></li>
