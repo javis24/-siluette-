@@ -4,19 +4,22 @@ import { useEffect, useState } from 'react';
 import PacienteForm from '@/components/forms/PacienteForm';
 import MetricasForm from '@/components/forms/MetricasForm';
 import TratamientosForm from '@/components/forms/TratamientosForm';
-
 import HistorialPacientes from '@/components/historial/HistorialPacientes';
 import HistorialMetricas from '@/components/historial/HistorialMetricas';
 import HistorialTratamientos from '@/components/historial/HistorialTratamientos';
 import HistorialCitas from '@/components/historial/HistorialCitas';
-
-
-
 import ExportarPDF from '@/components/ExportarPDF';
 
+interface User {
+  id: string;
+  name: string;
+  email: string;
+  role: string;
+}
+
 export default function PacienteManagerPage() {
-  const [users, setUsers] = useState<any[]>([]);
-  const [filteredUsers, setFilteredUsers] = useState<any[]>([]);
+  const [users, setUsers] = useState<User[]>([]);
+  const [filteredUsers, setFilteredUsers] = useState<User[]>([]);
   const [searchTerm, setSearchTerm] = useState('');
   const [userId, setUserId] = useState<string>('');
   const [pacienteUuid, setPacienteUuid] = useState<string>('');
@@ -33,8 +36,8 @@ export default function PacienteManagerPage() {
       });
 
       if (res.ok) {
-        const data = await res.json();
-        const clientsOnly = data.filter((user: any) => user.role === 'client');
+        const data: User[] = await res.json();
+        const clientsOnly = data.filter((user) => user.role === 'client');
         setUsers(clientsOnly);
       }
     };
@@ -52,7 +55,7 @@ export default function PacienteManagerPage() {
     setFilteredUsers(filtered);
   };
 
-  const handleUserSelect = async (user: any) => {
+  const handleUserSelect = async (user: User) => {
     setSearchTerm(user.name);
     setFilteredUsers([]);
     setUserId(user.id);
@@ -72,8 +75,8 @@ export default function PacienteManagerPage() {
           setPacienteUuid(paciente.uuid);
         }
       }
-    } catch  {
-      console.error('Error al buscar paciente existente');
+    } catch (error) {
+      console.error('Error al buscar paciente existente:', error);
     }
   };
 
@@ -144,26 +147,17 @@ export default function PacienteManagerPage() {
           )}
         </div>
       )}
+
       {pacienteUuid && (
-  <>
-    <ExportarPDF pacienteUuid={pacienteUuid} />
-    {pacienteUuid && (
-  <>
-    <HistorialPacientes pacienteUuid={pacienteUuid} />
-    <HistorialMetricas pacienteUuid={pacienteUuid} />
-    <HistorialTratamientos pacienteUuid={pacienteUuid} />
-  </>
-)}
+        <>
+          <ExportarPDF pacienteUuid={pacienteUuid} />
+          <HistorialPacientes pacienteUuid={pacienteUuid} />
+          <HistorialMetricas pacienteUuid={pacienteUuid} />
+          <HistorialTratamientos pacienteUuid={pacienteUuid} />
+        </>
+      )}
 
-{userId && (
-  <HistorialCitas userId={userId} />
-)}
-
-    
-  </>
-  
-)}
-
+      {userId && <HistorialCitas userId={userId} />}
     </div>
   );
 }

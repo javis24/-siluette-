@@ -37,7 +37,7 @@ export default function Page() {
         const data = await res.json();
         setMessage(`❌ ${data.message || 'Credenciales inválidas'}`);
       }
-    } catch (err) {
+    } catch {
       setMessage('❌ Error al conectar con el servidor');
     }
   };

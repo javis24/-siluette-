@@ -24,12 +24,16 @@ import {
 import { Button } from '@/components/ui/buttons';
 import CitaForm from '@/components/forms/CitaForm';
 
+interface User {
+  uuid: string;
+  name: string;
+  email: string;
+}
 
 export default function PerfilUsuarioPage() {
   const { id } = useParams();
-  const [user, setUser] = useState<any>(null);
+  const [user, setUser] = useState<User | null>(null);
   const [pacienteUuid, setPacienteUuid] = useState<string | null>(null);
-
   const [modalAbierto, setModalAbierto] = useState(false);
 
 

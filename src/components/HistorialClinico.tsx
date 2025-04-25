@@ -7,10 +7,20 @@ interface Props {
   userId: string;
 }
 
+interface BaseHistorial {
+  updatedAt: string;
+  [key: string]: unknown;
+}
+
+interface Cita {
+  fecha: string;
+  [key: string]: unknown;
+}
+
 interface HistorialEntry {
   tipo: string;
   fecha: string;
-  data: Record<string, any>;
+  data: BaseHistorial | Cita;
 }
 
 export default function HistorialClinico({ pacienteUuid, userId }: Props) {
@@ -29,7 +39,12 @@ export default function HistorialClinico({ pacienteUuid, userId }: Props) {
           fetch(`/api/citas?userId=${userId}`, { headers: { Authorization: `Bearer ${token}` } }),
         ]);
 
-        const [paciente, metricas, tratamientos, citas] = await Promise.all([
+        const [paciente, metricas, tratamientos, citas]: [
+          BaseHistorial,
+          BaseHistorial,
+          BaseHistorial,
+          Cita[]
+        ] = await Promise.all([
           pacienteRes.json(),
           metricasRes.json(),
           tratamientosRes.json(),
@@ -41,14 +56,17 @@ export default function HistorialClinico({ pacienteUuid, userId }: Props) {
         if (paciente) {
           data.push({ tipo: 'Datos del Paciente', fecha: paciente.updatedAt, data: paciente });
         }
+
         if (metricas) {
           data.push({ tipo: 'Métricas de Salud', fecha: metricas.updatedAt, data: metricas });
         }
+
         if (tratamientos) {
           data.push({ tipo: 'Tratamientos Estéticos', fecha: tratamientos.updatedAt, data: tratamientos });
         }
+
         if (Array.isArray(citas)) {
-          citas.forEach((cita: Record<string, any>) => {
+          citas.forEach((cita) => {
             data.push({ tipo: 'Cita', fecha: cita.fecha, data: cita });
           });
         }
@@ -108,7 +126,7 @@ export default function HistorialClinico({ pacienteUuid, userId }: Props) {
     return mapa[campo] || campo;
   };
 
-  const filtrarCampos = (obj: Record<string, any>) => {
+  const filtrarCampos = (obj: BaseHistorial | Cita) => {
     const excluidos = ['uuid', 'id', 'userId', 'createdAt', 'updatedAt'];
     return Object.entries(obj)
       .filter(([key]) => !excluidos.includes(key))

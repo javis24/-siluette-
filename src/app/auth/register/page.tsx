@@ -35,7 +35,7 @@ export default function Page() {
         const data = await res.json();
         setMessage(`❌ Error: ${data.message || 'No se pudo registrar el usuario'}`);
       }
-    } catch (err) {
+    } catch  {
       setMessage('❌ Error de conexión');
     }
   };
