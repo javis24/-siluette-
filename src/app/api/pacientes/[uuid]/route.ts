@@ -1,17 +1,18 @@
-import { NextResponse } from 'next/server';
+import {NextRequest, NextResponse } from 'next/server';
 import Pacientes from '@/models/Paciente';
 
 
-export async function GET(
-  req: Request,
-  context: { params: { uuid: string } }
-) {
-  const { uuid } = context.params; 
-
+export async function GET(req: NextRequest) {
   try {
-    const paciente = await Pacientes.findOne({
-      where: { uuid },
-    });
+    const { pathname } = new URL(req.url);
+
+    const parts = pathname.split('/');
+    const uuid = parts[parts.length - 2]; 
+    if (!uuid) {
+      return NextResponse.json({ error: 'UUID no proporcionado' }, { status: 400 });
+    }
+
+    const paciente = await Pacientes.findOne({ where: { uuid } });
 
     if (!paciente) {
       return NextResponse.json({ error: 'Paciente no encontrado' }, { status: 404 });
@@ -19,7 +20,7 @@ export async function GET(
 
     return NextResponse.json(paciente);
   } catch (error) {
-    console.error(error);
-    return NextResponse.json({ error: 'Error al obtener el paciente' }, { status: 500 });
+    console.error('Error al obtener paciente:', error);
+    return NextResponse.json({ error: 'Error del servidor' }, { status: 500 });
   }
 }
