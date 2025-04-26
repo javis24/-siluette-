@@ -1,6 +1,6 @@
 'use client';
 
-import TratamientosForm from '@/components/forms/TratamientosForm';
+
 
 export default function TratamientosPage() {
   return (

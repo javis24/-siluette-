@@ -1,6 +1,5 @@
 'use client';
 
-import MetricasForm from '@/components/forms/MetricasForm';
 
 export default function MetricasPage() {
   return (
