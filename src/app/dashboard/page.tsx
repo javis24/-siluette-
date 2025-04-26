@@ -1,15 +1,17 @@
 'use client';
 
-import DashboardCard from '@/components/DashboardCard';
+import Link from 'next/link';
 
-export default function DashboardHome() {
+export default function DashboardPage() {
   return (
-    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-        
-      <DashboardCard title="Pacientes" icon="👤" href="/dashboard/pacientes" />
-      <DashboardCard title="Citas" icon="📅" href="/dashboard/citas" />
-      <DashboardCard title="Tratamientos" icon="💆" href="/dashboard/tratamientos" />
-      <DashboardCard title="Reportes" icon="📊" href="/dashboard/reportes" />
+    <div className="p-6 space-y-4">
+      <h1 className="text-2xl font-bold text-gray-800 dark:text-white">Dashboard Principal</h1>
+      <ul className="space-y-2">
+        <li><Link href="/dashboard/pacientes" className="text-blue-500 hover:underline">Gestionar Pacientes</Link></li>
+        <li><Link href="/dashboard/metricas" className="text-blue-500 hover:underline">Registrar Métricas</Link></li>
+        <li><Link href="/dashboard/tratamientos" className="text-blue-500 hover:underline">Registrar Tratamientos</Link></li>
+        <li><Link href="/dashboard/citas" className="text-blue-500 hover:underline">Agendar Cita</Link></li>
+      </ul>
     </div>
   );
 }

@@ -1,12 +1,11 @@
 'use client';
 
 import CitaForm from '@/components/forms/CitaForm';
-import React from 'react';
 
-
-export default function PacientesPage() {
+export default function AgendarCitaPage() {
   return (
-    <div>
+    <div className="p-6 space-y-4">
+      <h1 className="text-2xl font-bold text-gray-800 dark:text-white">Agendar Cita</h1>
       <CitaForm />
     </div>
   );
