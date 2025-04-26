@@ -2,13 +2,12 @@ import { NextRequest, NextResponse } from 'next/server';
 import User from '@/models/User';
 import { hash } from 'bcryptjs';
 
+// GET usuario por ID
 export async function GET(req: NextRequest) {
   try {
     const { pathname } = new URL(req.url);
-
-
     const parts = pathname.split('/');
-    const id = parts[parts.length - 2]; 
+    const id = parts[parts.length - 1]; // Obtener id de la URL
 
     if (!id) {
       return NextResponse.json({ error: 'ID no proporcionado' }, { status: 400 });
@@ -27,14 +26,13 @@ export async function GET(req: NextRequest) {
   }
 }
 
-
-
-
-
-export async function PUT(req: NextRequest, context: { params: { id: string } }) {
-  const { id } = context.params;
-
+// PUT para actualizar usuario
+export async function PUT(req: NextRequest) {
   try {
+    const { pathname } = new URL(req.url);
+    const parts = pathname.split('/');
+    const id = parts[parts.length - 1]; // Obtener id de la URL
+
     const body = await req.json();
     const { name, email, password, role } = body;
 
@@ -53,16 +51,18 @@ export async function PUT(req: NextRequest, context: { params: { id: string } })
 
     return NextResponse.json({ message: 'Usuario actualizado correctamente ✅' });
   } catch (error) {
-    console.error(error);
+    console.error('Error al actualizar usuario:', error);
     return NextResponse.json({ error: 'Error al actualizar usuario' }, { status: 500 });
   }
 }
 
-
-export async function DELETE(req: NextRequest, context: { params: { id: string } }) {
-  const { id } = context.params;
-
+// DELETE para eliminar usuario
+export async function DELETE(req: NextRequest) {
   try {
+    const { pathname } = new URL(req.url);
+    const parts = pathname.split('/');
+    const id = parts[parts.length - 1]; // Obtener id de la URL
+
     const user = await User.findOne({ where: { uuid: id } });
     if (!user) return NextResponse.json({ error: 'Usuario no encontrado' }, { status: 404 });
 
@@ -70,7 +70,7 @@ export async function DELETE(req: NextRequest, context: { params: { id: string }
 
     return NextResponse.json({ message: 'Usuario eliminado' });
   } catch (error) {
-    console.error(error);
+    console.error('Error al eliminar usuario:', error);
     return NextResponse.json({ error: 'Error al eliminar usuario' }, { status: 500 });
   }
 }
