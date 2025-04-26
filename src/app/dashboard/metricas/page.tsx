@@ -4,7 +4,7 @@ import { useState } from 'react';
 import MetricasForm from '@/components/forms/MetricasForm';
 
 export default function RegistrarMetricasPage() {
-  const [pacienteUuid, setPacienteUuid] = useState<string | null>(null);
+  const [pacienteUuid, setPacienteUuid] = useState<string | null>('aqui-un-uuid-temporal');
 
   return (
     <div className="p-6 space-y-4">
@@ -13,7 +13,9 @@ export default function RegistrarMetricasPage() {
       {pacienteUuid ? (
         <MetricasForm pacienteUuid={pacienteUuid} />
       ) : (
-        <p className="text-gray-700 dark:text-white">Por favor selecciona un paciente.</p>
+        <p className="text-gray-700 dark:text-white">
+          Selecciona un paciente para registrar métricas.
+        </p>
       )}
     </div>
   );
