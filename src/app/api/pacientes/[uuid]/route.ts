@@ -1,5 +1,5 @@
 import {NextRequest, NextResponse } from 'next/server';
-import Pacientes from '@/models/Paciente';
+import Paciente from '@/models/Paciente';
 
 
 export async function GET(req: NextRequest) {
@@ -12,7 +12,7 @@ export async function GET(req: NextRequest) {
       return NextResponse.json({ error: 'UUID no proporcionado' }, { status: 400 });
     }
 
-    const paciente = await Pacientes.findOne({ where: { uuid } });
+    const paciente = await Paciente.findOne({ where: { uuid } });
 
     if (!paciente) {
       return NextResponse.json({ error: 'Paciente no encontrado' }, { status: 404 });

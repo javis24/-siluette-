@@ -1,24 +1,27 @@
 import { NextRequest, NextResponse } from 'next/server';
 import Paciente from '@/models/Paciente';
 
-export async function GET(
-  req: NextRequest,
-  context: { params: { id: string } }
-) {
+export async function GET(req: NextRequest) {
   try {
-    const id = context.params.id;
+    const { pathname } = new URL(req.url);
 
-    const paciente = await Paciente.findOne({
-      where: { userId: Number(id) },
-    });
+
+    const parts = pathname.split('/');
+    const id = parts[parts.length - 2]; 
+
+    if (!id) {
+      return NextResponse.json({ error: 'ID no proporcionado' }, { status: 400 });
+    }
+
+    const paciente = await Paciente.findOne({ where: { userId: id } });
 
     if (!paciente) {
-      return NextResponse.json({ error: 'Paciente no encontrado' }, { status: 404 });
+      return NextResponse.json({}, { status: 200 }); 
     }
 
     return NextResponse.json(paciente);
   } catch (error) {
-    console.error(error);
-    return NextResponse.json({ error: 'Error al buscar paciente' }, { status: 500 });
+    console.error('Error al obtener paciente por userId:', error);
+    return NextResponse.json({ error: 'Error interno del servidor' }, { status: 500 });
   }
 }
