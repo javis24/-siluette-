@@ -2,17 +2,19 @@ import { NextRequest, NextResponse } from 'next/server';
 import User from '@/models/User';
 import { hash } from 'bcryptjs';
 
-export async function GET(
-  req: NextRequest,
-  { params }: { params: { id: string } }
-) {
-  const id = params.id;
-
+export async function GET(req: NextRequest) {
   try {
-    const user = await User.findOne({
-      where: id.length === 36 ? { uuid: id } : { id: Number(id) },
-      attributes: ['uuid', 'name', 'email'],
-    });
+    const { pathname } = new URL(req.url);
+
+
+    const parts = pathname.split('/');
+    const id = parts[parts.length - 2]; 
+
+    if (!id) {
+      return NextResponse.json({ error: 'ID no proporcionado' }, { status: 400 });
+    }
+
+    const user = await User.findByPk(id);
 
     if (!user) {
       return NextResponse.json({ error: 'Usuario no encontrado' }, { status: 404 });
@@ -20,14 +22,15 @@ export async function GET(
 
     return NextResponse.json(user);
   } catch (error) {
-    console.error(error);
-    return NextResponse.json({ error: 'Error al buscar el usuario' }, { status: 500 });
+    console.error('Error al obtener usuario:', error);
+    return NextResponse.json({ error: 'Error interno del servidor' }, { status: 500 });
   }
 }
 
 
 
-// PUT: Actualizar usuario
+
+
 export async function PUT(req: NextRequest, context: { params: { id: string } }) {
   const { id } = context.params;
 
@@ -55,7 +58,7 @@ export async function PUT(req: NextRequest, context: { params: { id: string } })
   }
 }
 
-// DELETE: Eliminar usuario
+
 export async function DELETE(req: NextRequest, context: { params: { id: string } }) {
   const { id } = context.params;
 
