@@ -1,19 +1,21 @@
 import { NextRequest, NextResponse } from 'next/server';
 import User from '@/models/User';
+import Paciente from '@/models/Paciente'; 
 import { hash } from 'bcryptjs';
 
-// GET usuario por ID
 export async function GET(req: NextRequest) {
   try {
     const { pathname } = new URL(req.url);
     const parts = pathname.split('/');
-    const id = parts[parts.length - 1]; // Obtener id de la URL
+    const id = parts[parts.length - 1]; 
 
     if (!id) {
       return NextResponse.json({ error: 'ID no proporcionado' }, { status: 400 });
     }
 
-    const user = await User.findByPk(id);
+    const user = await User.findByPk(id, {
+      include: [{ model: Paciente, as: 'paciente' }]
+    });  
 
     if (!user) {
       return NextResponse.json({ error: 'Usuario no encontrado' }, { status: 404 });
@@ -25,6 +27,7 @@ export async function GET(req: NextRequest) {
     return NextResponse.json({ error: 'Error interno del servidor' }, { status: 500 });
   }
 }
+
 
 // PUT para actualizar usuario
 export async function PUT(req: NextRequest) {

@@ -1,6 +1,7 @@
 import { DataTypes } from 'sequelize';
 import db from '@/lib/sequelize'; 
 
+
 const User = db.define('users', {
   uuid: {
     type: DataTypes.STRING,

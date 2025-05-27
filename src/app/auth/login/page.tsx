@@ -20,7 +20,7 @@ export default function Page() {
     e.preventDefault();
 
     try {
-      const res = await fetch('/api/auth/login', { // ✅ SIN /route
+      const res = await fetch('/api/auth/login', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(formData),
@@ -28,17 +28,40 @@ export default function Page() {
 
       if (res.ok) {
         const data = await res.json();
-        localStorage.setItem('token', data.token); // opcional si usas token
+        localStorage.setItem('token', data.token);
         localStorage.setItem('user', JSON.stringify(data.user));
 
         setMessage('✅ Inicio de sesión exitoso');
-        router.push('/dashboard');
+
+        if (data.user.role === 'admin' || data.user.role === 'secretary') {
+          router.push('/dashboard/px');
+        } else if (data.user.role === 'client') {
+          const token = data.token;
+
+          const pacienteRes = await fetch(`/api/users/${data.user.id}`, {
+            headers: {
+              Authorization: `Bearer ${token}`,
+            },
+          });
+
+          const pacienteData = await pacienteRes.json();
+
+          if (pacienteData?.paciente?.uuid) {
+            router.push(`/dashboard/historial/${pacienteData.paciente.uuid}`);
+          } else {
+            setMessage('❌ No se encontró historial del paciente');
+          }
+        } else {
+          router.push('/dashboard');
+        }
+      } else if (res.status === 401) {
+        setMessage('❌ Correo electrónico o contraseña incorrectos');
       } else {
-        const data = await res.json();
-        setMessage(`❌ ${data.message || 'Credenciales inválidas'}`);
+        setMessage('❌ Error al iniciar sesión. Inténtalo de nuevo más tarde.');
       }
-    } catch {
+    } catch (error) {
       setMessage('❌ Error al conectar con el servidor');
+      console.error('Login error:', error);
     }
   };
 

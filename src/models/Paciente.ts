@@ -68,8 +68,9 @@ const Paciente = db.define('paciente', {
   timestamps: true
 });
 
-// Relaciones
-User.hasMany(Paciente, { foreignKey: 'userId' });
-Paciente.belongsTo(User, { foreignKey: 'userId' });
+User.hasOne(Paciente, { foreignKey: 'userId', as: 'paciente' });
+Paciente.belongsTo(User, { foreignKey: 'userId', as: 'Paciente' });
+
+
 
 export default Paciente;

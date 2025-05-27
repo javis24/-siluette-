@@ -10,7 +10,11 @@ export async function POST(req: NextRequest) {
   const { email, password } = await req.json();
 
   try {
-    const user = await User.findOne({ where: { email } });
+    const user = await User.findOne({
+      where: { email },
+      attributes: ['id', 'uuid', 'name', 'email', 'password', 'role'],
+    });
+    
 
     if (!user) {
       return NextResponse.json({ message: 'Usuario no encontrado' }, { status: 404 });
@@ -25,6 +29,7 @@ export async function POST(req: NextRequest) {
 
     const token = jwt.sign(
       {
+        id: userData.id,
         uuid: userData.uuid,
         name: userData.name,
         email: userData.email,
@@ -38,6 +43,7 @@ export async function POST(req: NextRequest) {
       {
         token,
         user: {
+          id: userData.id,
           uuid: userData.uuid,
           name: userData.name,
           email: userData.email,
