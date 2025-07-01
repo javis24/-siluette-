@@ -7,7 +7,8 @@ interface User {
   id: string;
   name: string;
   email: string;
-  role: string; // 👈 añadimos "role" para poder filtrar
+  role: string;
+  pacienteUuid?: string; // útil para redirigir a historial si es client
 }
 
 export default function ClientListPage() {
@@ -15,29 +16,55 @@ export default function ClientListPage() {
   const [filteredUsers, setFilteredUsers] = useState<User[]>([]);
   const [searchTerm, setSearchTerm] = useState('');
   const [currentPage, setCurrentPage] = useState(1);
+  const [isAuthorized, setIsAuthorized] = useState(false);
   const pageSize = 10;
 
   const router = useRouter();
 
   useEffect(() => {
-    const fetchUsers = async () => {
-      const token = localStorage.getItem('token');
-      const res = await fetch('/api/users', {
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-      });
+    const token = localStorage.getItem('token');
+    const userData = localStorage.getItem('user');
 
-      if (res.ok) {
-        const data: User[] = await res.json();
-        const clients = data.filter((u) => u.role === 'client');
-        setUsers(clients);
-        setFilteredUsers(clients);
+    if (!token || !userData) {
+      router.push('/auth/login');
+      return;
+    }
+
+    try {
+      const parsed: User = JSON.parse(userData);
+
+      if (parsed.role === 'client') {
+        // Redirigir a historial si es client
+        router.push(`/dashboard/historial/${parsed.pacienteUuid || parsed.id}`);
+        return;
       }
-    };
 
-    fetchUsers();
-  }, []);
+      if (parsed.role === 'admin' || parsed.role === 'secretary') {
+        setIsAuthorized(true);
+
+        const fetchUsers = async () => {
+          const res = await fetch('/api/users', {
+            headers: {
+              Authorization: `Bearer ${token}`,
+            },
+          });
+
+          if (res.ok) {
+            const data: User[] = await res.json();
+            const clients = data.filter((u) => u.role === 'client');
+            setUsers(clients);
+            setFilteredUsers(clients);
+          }
+        };
+
+        fetchUsers();
+      } else {
+        router.push('/auth/login');
+      }
+    } catch (err) {
+      router.push('/auth/login');
+    }
+  }, [router]);
 
   useEffect(() => {
     const filtered = users.filter((user) =>
@@ -54,6 +81,14 @@ export default function ClientListPage() {
     currentPage * pageSize
   );
 
+  if (!isAuthorized) {
+    return (
+      <div className="p-6 text-center text-gray-700 dark:text-white">
+        Verificando permisos...
+      </div>
+    );
+  }
+
   return (
     <div className="p-6 space-y-4">
       <h1 className="text-2xl font-bold text-gray-800 dark:text-white">Listado de Clientes</h1>
@@ -63,17 +98,13 @@ export default function ClientListPage() {
         placeholder="Buscar por nombre o email"
         value={searchTerm}
         onChange={(e) => setSearchTerm(e.target.value)}
-        className="w-full p-2 rounded border dark:bg-gray-700 dark:text-white"
+        className="w-sm p-2 rounded border dark:bg-gray-700 text-white"
       />
-
-      {/* Encabezado del listado */}
-      <div className="grid grid-cols-1 md:grid-cols-3 font-semibold text-gray-700 dark:text-gray-200 border-b pb-2">
+     <div className="grid grid-cols-1 md:grid-cols-3 font-semibold text-gray-700 dark:text-gray-200 border-b pb-2">
         <span>👤 Paciente</span>
         <span>📧 Correo</span>
         <span>🔍 Acción</span>
       </div>
-
-      {/* Lista de usuarios paginados */}
       <ul className="divide-y divide-gray-200 dark:divide-gray-600">
         {paginatedUsers.map((user) => (
           <li

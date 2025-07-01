@@ -3,17 +3,11 @@
 import { useEffect, useState } from 'react';
 import { useParams } from 'next/navigation';
 
-import HistorialPacientes from '@/components/historial/HistorialPacientes';
-import HistorialMetricas from '@/components/historial/HistorialMetricas';
-import HistorialTratamientos from '@/components/historial/HistorialTratamientos';
-import HistorialCitas from '@/components/historial/HistorialCitas';
-
+import HistorialClinico from '@/components/HistorialClinico';
 import PacienteForm from '@/components/forms/PacienteForm';
 import MetricasForm from '@/components/forms/MetricasForm';
 import TratamientosForm from '@/components/forms/TratamientosForm';
-
-import HistorialClinico  from '@/components/HistorialClinico';
-
+import HistorialCitas from '@/components/historial/HistorialCitas';
 
 import {
   Dialog,
@@ -28,6 +22,7 @@ interface User {
   uuid: string;
   name: string;
   email: string;
+  role: string;
 }
 
 export default function PerfilUsuarioPage() {
@@ -36,102 +31,119 @@ export default function PerfilUsuarioPage() {
   const [pacienteUuid, setPacienteUuid] = useState<string | null>(null);
   const [modalAbierto, setModalAbierto] = useState(false);
 
+  const [datosPaciente, setDatosPaciente] = useState<any>(null);
+  const [datosMetricas, setDatosMetricas] = useState<any>(null);
+  const [datosTratamientos, setDatosTratamientos] = useState<any>(null);
 
   useEffect(() => {
     const token = localStorage.getItem('token');
     if (!token || !id) return;
-  
+
     const fetchData = async () => {
       try {
+        // Obtener usuario
         const userRes = await fetch(`/api/users/${id}`, {
           headers: { Authorization: `Bearer ${token}` },
         });
-    
-        if (!userRes.ok) {
-          console.error('No se pudo obtener el usuario');
-          return;
-        }
-    
-        const userData = await userRes.json();
+
+        if (!userRes.ok) throw new Error('No se pudo obtener el usuario');
+
+        const userData: User = await userRes.json();
         setUser(userData);
-    
+
+        // Obtener paciente por userId
         const pacienteRes = await fetch(`/api/pacientes/by-user/${id}`, {
           headers: { Authorization: `Bearer ${token}` },
         });
-    
-        if (pacienteRes.ok) {
-          const paciente = await pacienteRes.json();
-          if (paciente?.uuid) {
-            setPacienteUuid(paciente.uuid);
+
+        if (!pacienteRes.ok) return;
+
+        const paciente = await pacienteRes.json();
+
+        if (paciente?.uuid) {
+          setPacienteUuid(paciente.uuid);
+          setDatosPaciente(paciente); // Datos para <PacienteForm />
+
+          // Obtener métricas
+          const metricasRes = await fetch(`/api/metricas?uuid=${paciente.uuid}`, {
+            headers: { Authorization: `Bearer ${token}` },
+          });
+          if (metricasRes.ok) {
+            const metricas = await metricasRes.json();
+            setDatosMetricas(metricas);
+          }
+
+          // Obtener tratamientos
+          const tratamientosRes = await fetch(`/api/tratamientos?uuid=${paciente.uuid}`, {
+            headers: { Authorization: `Bearer ${token}` },
+          });
+          if (tratamientosRes.ok) {
+            const tratamientos = await tratamientosRes.json();
+            setDatosTratamientos(tratamientos);
           }
         }
-      } catch  {
-        console.error('Error cargando datos del perfil');
+      } catch (err) {
+        console.error('Error cargando datos del perfil:', err);
       }
     };
-  
+
     fetchData();
   }, [id]);
-  
 
   return (
-    <div className="p-6 space-y-4">
-      <h1 className="text-2xl font-bold text-gray-800 dark:text-white">Perfil del Paciente</h1>
-      <div className="flex justify-end mb-4">
-        <Button onClick={() => setModalAbierto(true)} className="bg-blue-600 text-white hover:bg-blue-700">
+    <div className="p-6 space-y-6">
+      <div className="flex justify-between items-center">
+        <h1 className="text-2xl font-bold text-gray-800 dark:text-white">🧾 Perfil del Paciente</h1>
+        <Button
+          onClick={() => setModalAbierto(true)}
+          className="bg-blue-600 text-white hover:bg-blue-700"
+        >
           ➕ Agendar Cita
         </Button>
       </div>
 
-
       {user && (
-        <div className="bg-gray-800 p-4 rounded shadow flex flex-wrap items-center gap-6 text-white font-bold text-lg">
-        <p>👤 Nombre: <span className="ml-1 font-semibold">{user.name}</span></p>
-        <p>📧 Email: <span className="ml-1 font-semibold">{user.email}</span></p>
-      </div>
-      
+        <div className="bg-gray-800 p-4 rounded shadow text-white">
+          <p>👤 <strong>Nombre:</strong> {user.name}</p>
+          <p>📧 <strong>Email:</strong> {user.email}</p>
+        </div>
       )}
 
-      {/* Mostrar formulario de paciente (lo creará si no existe) */}
+      {/* Formulario del paciente */}
       {id && (
         <PacienteForm
           defaultUserId={id.toString()}
+          defaultValues={datosPaciente}
           onPacienteCreado={(uuid) => setPacienteUuid(uuid)}
         />
       )}
 
-      {/* Formularios de métricas y tratamientos si ya existe paciente */}
+      {/* Formularios métricas y tratamientos */}
       {pacienteUuid && (
         <>
-          <MetricasForm pacienteUuid={pacienteUuid} />
-          <TratamientosForm pacienteUuid={pacienteUuid} />
+          <MetricasForm pacienteUuid={pacienteUuid} defaultValues={datosMetricas} />
+          <TratamientosForm pacienteUuid={pacienteUuid} defaultValues={datosTratamientos} />
         </>
       )}
 
-      {/* Historial clínico completo */}
-      {pacienteUuid && (
-        <>
-          <HistorialPacientes pacienteUuid={pacienteUuid} />
-          <HistorialMetricas pacienteUuid={pacienteUuid} />
-          <HistorialTratamientos pacienteUuid={pacienteUuid} />
-        </>
+      <hr className="border-t border-gray-600 my-4" />
+
+      <h2 className="text-xl font-bold text-gray-700 dark:text-white">📘 Historial Clínico</h2>
+
+      {pacienteUuid && user && (
+        <HistorialClinico pacienteUuid={pacienteUuid} userId={user.uuid} />
       )}
 
       {id && <HistorialCitas userId={id.toString()} />}
 
-      {pacienteUuid && user && (
-    <HistorialClinico pacienteUuid={pacienteUuid} userId={user.uuid} />
-  )}
-       <Dialog open={modalAbierto} onOpenChange={setModalAbierto}>
-          <DialogContent className="max-w-2xl">
-            <DialogHeader>
-              <DialogTitle>🗓️ Agendar una nueva cita</DialogTitle>
-            </DialogHeader>
-            <CitaForm />
-          </DialogContent>
-        </Dialog>
-    </div>    
+      <Dialog open={modalAbierto} onOpenChange={setModalAbierto}>
+        <DialogContent className="max-w-2xl">
+          <DialogHeader>
+            <DialogTitle>🗓️ Agendar una nueva cita</DialogTitle>
+          </DialogHeader>
+          <CitaForm userId={id?.toString()} />
+        </DialogContent>
+      </Dialog>
+    </div>
   );
- 
-  
 }

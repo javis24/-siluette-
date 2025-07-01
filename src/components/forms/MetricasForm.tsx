@@ -1,9 +1,10 @@
 'use client';
 
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 
 interface Props {
   pacienteUuid: string;
+  defaultValues?: Partial<Metricas>; // Asegura que es opcional
 }
 
 interface Metricas {
@@ -25,7 +26,7 @@ interface Metricas {
   kcla: string;
 }
 
-export default function MetricasForm({ pacienteUuid }: Props) {
+export default function MetricasForm({ pacienteUuid, defaultValues }: Props) {
   const [formData, setFormData] = useState<Metricas>({
     weight: '',
     fatPercentage: '',
@@ -43,6 +44,7 @@ export default function MetricasForm({ pacienteUuid }: Props) {
     waist: '',
     abdomen: '',
     kcla: '',
+    ...(defaultValues || {}), // ✅ evitar error si defaultValues es undefined
   });
 
   const [message, setMessage] = useState('');
@@ -100,7 +102,9 @@ export default function MetricasForm({ pacienteUuid }: Props) {
       onSubmit={handleSubmit}
       className="grid grid-cols-1 md:grid-cols-3 gap-4 bg-white dark:bg-gray-800 p-6 rounded shadow-md"
     >
-      <h2 className="col-span-full text-xl font-bold text-gray-800 dark:text-white">Métricas de Salud</h2>
+      <h2 className="col-span-full text-xl font-bold text-gray-800 dark:text-white">
+        Métricas de Salud
+      </h2>
 
       {Object.entries(formData).map(([name, value]) => (
         <input

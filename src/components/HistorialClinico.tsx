@@ -41,7 +41,6 @@ export default function HistorialClinico({ pacienteUuid, userId }: Props) {
           fetch(`/api/metricas?uuid=${pacienteUuid}`, { headers: { Authorization: `Bearer ${token}` } }),
           fetch(`/api/tratamientos?uuid=${pacienteUuid}`, { headers: { Authorization: `Bearer ${token}` } }),
         ];
-        // Sólo añadir citas si tenemos userId
         if (userId) {
           endpoints.push(
             fetch(`/api/citas?userId=${userId}`, { headers: { Authorization: `Bearer ${token}` } })
@@ -85,7 +84,7 @@ export default function HistorialClinico({ pacienteUuid, userId }: Props) {
   }, [pacienteUuid, userId]);
 
   const traducirCampo = (campo: string) => {
-    const mapa: Record<string,string> = {
+    const mapa: Record<string, string> = {
       name: 'Nombre',
       email: 'Correo',
       phoneNumber: 'Teléfono',
@@ -139,18 +138,19 @@ export default function HistorialClinico({ pacienteUuid, userId }: Props) {
       y += 20;
 
       const rows = Object.entries(entry.data)
-        .filter(([k]) => !['uuid','id','userId','createdAt','updatedAt'].includes(k))
-        .map(([k,v]) => [traducirCampo(k), String(v)]);
+        .filter(([k]) => !['uuid', 'id', 'userId', 'createdAt', 'updatedAt'].includes(k))
+        .map(([k, v]) => [traducirCampo(k), String(v)]);
 
       autoTable(doc, {
         startY: y,
-        head: [['Campo','Valor']],
+        head: [['Campo', 'Valor']],
         body: rows,
         styles: { fontSize: 10 },
         headStyles: { fillColor: [41, 128, 185] },
         margin: { left: 40, right: 40 }
       });
 
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
       y = (doc as any).lastAutoTable.finalY + 30;
     });
 
@@ -183,38 +183,37 @@ export default function HistorialClinico({ pacienteUuid, userId }: Props) {
       )}
 
       {historial
-      .filter(entry => {
-        if (!filtroFecha) return true;
-        const fechaEntry = new Date(entry.fecha).toISOString().slice(0, 10);
-        return fechaEntry === filtroFecha;
-      })
-      .map((entry, i) => (
-        <div key={i} className="mb-6 bg-gray-950 p-4 rounded shadow">
-          <div className="flex items-center mb-2 text-amber-50">
-            {entry.tipo === 'Datos del Paciente' && <UserRound className="mr-2" />}
-            {entry.tipo === 'Métricas de Salud' && <HeartPulse className="mr-2" />}
-            {entry.tipo === 'Tratamientos Estéticos' && <FileText className="mr-2" />}
-            {entry.tipo === 'Cita' && <CalendarDays className="mr-2" />}
-            <h3 className="text-lg font-semibold">{entry.tipo}</h3>
-          </div>
-          <p className="text-sm text-gray-400 mb-4">
-            Última actualización: {new Date(entry.fecha).toLocaleString()}
-          </p>
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
-            {Object.entries(entry.data)
-              .filter(([k]) => !['uuid','id','userId','createdAt','updatedAt'].includes(k))
-              .map(([k,v]) => (
-                <div key={k} className="p-2 bg-white rounded border">
-                  <div className="text-xs text-blue-600 font-medium">
-                    {traducirCampo(k)}
+        .filter(entry => {
+          if (!filtroFecha) return true;
+          const fechaEntry = new Date(entry.fecha).toISOString().slice(0, 10);
+          return fechaEntry === filtroFecha;
+        })
+        .map((entry, i) => (
+          <div key={i} className="mb-6 bg-gray-950 p-4 rounded shadow">
+            <div className="flex items-center mb-2 text-amber-50">
+              {entry.tipo === 'Datos del Paciente' && <UserRound className="mr-2" />}
+              {entry.tipo === 'Métricas de Salud' && <HeartPulse className="mr-2" />}
+              {entry.tipo === 'Tratamientos Estéticos' && <FileText className="mr-2" />}
+              {entry.tipo === 'Cita' && <CalendarDays className="mr-2" />}
+              <h3 className="text-lg font-semibold">{entry.tipo}</h3>
+            </div>
+            <p className="text-sm text-gray-400 mb-4">
+              Última actualización: {new Date(entry.fecha).toLocaleString()}
+            </p>
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+              {Object.entries(entry.data)
+                .filter(([k]) => !['uuid', 'id', 'userId', 'createdAt', 'updatedAt'].includes(k))
+                .map(([k, v]) => (
+                  <div key={k} className="p-2 bg-white rounded border">
+                    <div className="text-xs text-blue-600 font-medium">
+                      {traducirCampo(k)}
+                    </div>
+                    <div className="text-sm">{String(v)}</div>
                   </div>
-                  <div className="text-sm">{String(v)}</div>
-                </div>
-              ))
-            }
+                ))}
+            </div>
           </div>
-        </div>
-      ))}
+        ))}
     </div>
   );
 }

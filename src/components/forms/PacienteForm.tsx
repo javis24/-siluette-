@@ -1,10 +1,11 @@
 'use client';
 
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 
 interface Props {
   onPacienteCreado?: (uuid: string) => void;
   defaultUserId?: string;
+  defaultValues?: Partial<PacienteData>;
 }
 
 interface PacienteData {
@@ -20,7 +21,8 @@ interface PacienteData {
   userId: number | '';
 }
 
-export default function PacienteForm({ onPacienteCreado, defaultUserId }: Props) {
+
+export default function PacienteForm({ onPacienteCreado, defaultUserId, defaultValues }: Props) {
   const [formData, setFormData] = useState<PacienteData>({
     name: '',
     email: '',
@@ -31,10 +33,20 @@ export default function PacienteForm({ onPacienteCreado, defaultUserId }: Props)
     unwantedGain: '',
     address: '',
     pathologies: '',
-    userId: '',
+    userId: defaultUserId ? Number(defaultUserId) : 0,
   });
 
   const [message, setMessage] = useState('');
+
+  useEffect(() => {
+    if (defaultValues) {
+      setFormData(prev => ({
+        ...prev,
+        ...defaultValues,
+        userId: defaultUserId ? Number(defaultUserId) : 0,
+      }));
+    }
+  }, [defaultValues, defaultUserId]);
 
   const handleChange = (
     e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
@@ -56,7 +68,7 @@ export default function PacienteForm({ onPacienteCreado, defaultUserId }: Props)
           'Content-Type': 'application/json',
           Authorization: `Bearer ${token}`,
         },
-        body: JSON.stringify({ ...formData, userId: Number(defaultUserId) }),
+        body: JSON.stringify(formData),
       });
 
       if (res.ok) {
@@ -82,87 +94,19 @@ export default function PacienteForm({ onPacienteCreado, defaultUserId }: Props)
         Registrar Paciente
       </h2>
 
-      <input
-        type="text"
-        name="name"
-        value={formData.name}
-        onChange={handleChange}
-        placeholder="Nombre completo"
-        className="input"
-        required
-      />
-      <input
-        type="email"
-        name="email"
-        value={formData.email}
-        onChange={handleChange}
-        placeholder="Correo electrónico"
-        className="input"
-      />
-      <input
-        type="tel"
-        name="phoneNumber"
-        value={formData.phoneNumber}
-        onChange={handleChange}
-        placeholder="Teléfono"
-        className="input"
-      />
-      <input
-        type="number"
-        name="age"
-        value={formData.age}
-        onChange={handleChange}
-        placeholder="Edad"
-        className="input"
-      />
-      <input
-        type="number"
-        name="height"
-        step="0.01"
-        value={formData.height}
-        onChange={handleChange}
-        placeholder="Altura (m)"
-        className="input"
-      />
-      <input
-        type="date"
-        name="evaluationDate"
-        value={formData.evaluationDate}
-        onChange={handleChange}
-        placeholder="Fecha de evaluación"
-        className="input"
-      />
-      <input
-        type="text"
-        name="unwantedGain"
-        value={formData.unwantedGain}
-        onChange={handleChange}
-        placeholder="Aumento no deseado"
-        className="input"
-      />
-      <input
-        type="text"
-        name="address"
-        value={formData.address}
-        onChange={handleChange}
-        placeholder="Dirección"
-        className="input"
-      />
-      <textarea
-        name="pathologies"
-        value={formData.pathologies}
-        onChange={handleChange}
-        placeholder="Patologías"
-        className="textarea md:col-span-2"
-      />
+      <input type="text" name="name" value={formData.name} onChange={handleChange} placeholder="Nombre completo" className="input" required />
+      <input type="email" name="email" value={formData.email} onChange={handleChange} placeholder="Correo electrónico" className="input" />
+      <input type="tel" name="phoneNumber" value={formData.phoneNumber} onChange={handleChange} placeholder="Teléfono" className="input" />
+      <input type="number" name="age" value={formData.age} onChange={handleChange} placeholder="Edad" className="input" />
+      <input type="number" name="height" step="0.01" value={formData.height} onChange={handleChange} placeholder="Altura (m)" className="input" />
+      <input type="date" name="evaluationDate" value={formData.evaluationDate} onChange={handleChange} className="input" />
+      <input type="text" name="unwantedGain" value={formData.unwantedGain} onChange={handleChange} placeholder="Aumento no deseado" className="input" />
+      <input type="text" name="address" value={formData.address} onChange={handleChange} placeholder="Dirección" className="input" />
+      <textarea name="pathologies" value={formData.pathologies} onChange={handleChange} placeholder="Patologías" className="textarea md:col-span-2" />
 
       <div className="col-span-full flex gap-2 justify-end">
-        <button type="submit" className="btn">
-          Guardar
-        </button>
-        <button type="reset" className="btn-secondary">
-          Cancelar
-        </button>
+        <button type="submit" className="btn">Guardar</button>
+        <button type="reset" className="btn-secondary">Cancelar</button>
       </div>
 
       {message && (

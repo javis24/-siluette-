@@ -1,24 +1,43 @@
-// TratamientosForm.tsx
 'use client';
 
 import { useState } from 'react';
 
 interface Props {
   pacienteUuid: string;
+  defaultValues?: Partial<FormDataType>;
 }
 
-export default function TratamientosForm({ pacienteUuid }: Props) {
-  const [formData, setFormData] = useState({
-    cavitation: '',
-    radioFrequency: '',
-    lipoLaser: '',
-    vacuum: '',
-    gluteCups: '',
-    woodTherapy: '',
-    lymphaticDrainage: '',
-    detox: '',
-    mesotherapy: '',
-    passiveGym: '',
+interface FormDataType {
+  cavitation: string;
+  radioFrequency: string;
+  lipoLaser: string;
+  vacuum: string;
+  gluteCups: string;
+  woodTherapy: string;
+  lymphaticDrainage: string;
+  detox: string;
+  mesotherapy: string;
+  passiveGym: string;
+}
+
+// ✅ Valores por defecto en constante aparte
+const formDefaults: FormDataType = {
+  cavitation: '',
+  radioFrequency: '',
+  lipoLaser: '',
+  vacuum: '',
+  gluteCups: '',
+  woodTherapy: '',
+  lymphaticDrainage: '',
+  detox: '',
+  mesotherapy: '',
+  passiveGym: ''
+};
+
+export default function TratamientosForm({ pacienteUuid, defaultValues }: Props) {
+  const [formData, setFormData] = useState<FormDataType>({
+    ...formDefaults,
+    ...(defaultValues || {}) // ✅ usa defaultValues solo si existen
   });
 
   const [message, setMessage] = useState('');
@@ -45,10 +64,7 @@ export default function TratamientosForm({ pacienteUuid }: Props) {
 
       if (res.ok) {
         setMessage('✅ Tratamientos guardados');
-        setFormData({
-          cavitation: '', radioFrequency: '', lipoLaser: '', vacuum: '', gluteCups: '',
-          woodTherapy: '', lymphaticDrainage: '', detox: '', mesotherapy: '', passiveGym: ''
-        });
+        setFormData(formDefaults); // ✅ reinicia con los valores por defecto
       } else {
         setMessage('❌ Error al guardar tratamientos');
       }
